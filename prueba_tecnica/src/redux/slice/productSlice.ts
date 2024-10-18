@@ -4,9 +4,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export interface productSliceType {
   productList: ProductType[];
+  selectedCategoryId: string;
 }
 const initialState: productSliceType = {
   productList: [],
+  selectedCategoryId: "0",
 };
 
 export const productSlice = createSlice({
@@ -39,6 +41,9 @@ export const productSlice = createSlice({
     createProductReducer: (state, action: PayloadAction<ProductType>) => {
       state.productList = [action.payload, ...state.productList];
     },
+    setSelectedCategoryIdReducer: (state, action: PayloadAction<string>) => {
+      state.selectedCategoryId = action.payload;
+    },
   },
 });
 
@@ -47,6 +52,7 @@ export const {
   createProductReducer,
   deleteProductReducer,
   updateProductReducer,
+  setSelectedCategoryIdReducer,
 } = productSlice.actions;
 
 export default productSlice.reducer;

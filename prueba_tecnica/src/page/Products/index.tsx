@@ -21,6 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 import {
   deleteProductReducer,
   setProductListReducer,
+  setSelectedCategoryIdReducer,
 } from "@/redux/slice/productSlice";
 import { RootState } from "@/redux/store";
 import { deleteOneProduct, findAllProducts } from "@/services/products";
@@ -38,10 +39,12 @@ const ProductsPage = () => {
   const productList = useSelector(
     (state: RootState) => state.product.productList,
   );
+  const selectedCategoryId = useSelector(
+    (state: RootState) => state.product.selectedCategoryId,
+  );
   const calegoryList = useSelector(
     (state: RootState) => state.category.calegoryList,
   );
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("0");
 
   useEffect(() => {
     (async () => {
@@ -94,7 +97,7 @@ const ProductsPage = () => {
         defaultValue={selectedCategoryId}
         onValueChange={async (e) => {
           try {
-            setSelectedCategoryId(e);
+            dispath(setSelectedCategoryIdReducer(e));
             const response = await findAllProducts({ categoryId: e });
             dispath(setProductListReducer(response));
           } catch (error) {
