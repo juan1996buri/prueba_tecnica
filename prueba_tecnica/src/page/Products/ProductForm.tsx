@@ -81,14 +81,20 @@ const ProductForm: React.FC<{ product?: ProductType; edit: boolean }> = ({
 
     defaultValues: {
       title: product?.title,
-      price: product?.price.toString(),
+      price: product?.price?.toString(),
       description: product?.description,
       creationAt: product?.creationAt,
       updatedAt: product?.updatedAt,
-      categoryId: product?.category?.id ?? 0,
+      categoryId: product?.category?.id,
       images: product?.images ?? [],
     },
   });
+  useEffect(() => {
+    if (calegoryList.length > 0 && form.getValues("categoryId") === undefined) {
+      console.log("ingresp");
+      form.setValue("categoryId", calegoryList[0].id);
+    }
+  }, [calegoryList, calegoryList.length, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const productSend: ProductType = {
@@ -161,7 +167,7 @@ const ProductForm: React.FC<{ product?: ProductType; edit: boolean }> = ({
         images: product.images ?? [],
       });
     }
-  }, [product, form]);
+  }, [product, form, calegoryList]);
 
   return (
     <div>
@@ -215,7 +221,6 @@ const ProductForm: React.FC<{ product?: ProductType; edit: boolean }> = ({
                                 setSelectedImageItem(e.target.value)
                               }
                               defaultValue={selectedImageItem}
-                              value={selectedImageItem}
                             />
                             <Button
                               type="button"
@@ -331,7 +336,7 @@ const ProductForm: React.FC<{ product?: ProductType; edit: boolean }> = ({
                       <FormLabel>Categoria</FormLabel>
                       <Select
                         onValueChange={(e) => field.onChange(Number(e))}
-                        defaultValue={field.value.toString()}
+                        defaultValue={field?.value?.toString()}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -339,10 +344,13 @@ const ProductForm: React.FC<{ product?: ProductType; edit: boolean }> = ({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {calegoryList.map((categoryItem) => {
+                          {calegoryList?.map((categoryItem) => {
                             return (
-                              <SelectItem value={categoryItem.id.toString()}>
-                                {categoryItem.name}
+                              <SelectItem
+                                key={categoryItem.id}
+                                value={categoryItem?.id?.toString()}
+                              >
+                                {categoryItem?.name}
                               </SelectItem>
                             );
                           })}
